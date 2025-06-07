@@ -64,90 +64,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: "https://registry.npmjs.org"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # 3) Install Bun (package manager / runtime)
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "latest"
-        env:
-          BUN_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # 4) Install deps (if any) using Bun's lock-file
-      - name: Install dependencies
-        run: |
-          cd node-configs
-          echo "Package version: ${{ needs.check-version.outputs.current_version }}"
-          bun install --frozen-lockfile
-
-      # - name: Setup Deno (for JSR)
-      #   uses: denoland/setup-deno@v2
-      #   with:
-      #     deno-version: v2.x
-      # - name: Prepare package
-      #   run: |
-      #     cd node-configs
-      #     # Ensure all necessary files exist
-      #     for dir in autocorrect biome markdownlint-cli2 prettier; do
-      #       if [ ! -f "$dir/index.js" ]; then
-      #         echo "Error: Missing $dir/index.js"
-      #         exit 1
-      #       fi
-      #       if [ ! -f "$dir/index.cjs" ]; then
-      #         echo "Error: Missing $dir/index.cjs"
-      #         exit 1
-      #       fi
-      #     done
-      #     echo "Package version: ${{ needs.check-version.outputs.current_version }}"
-      # - name: Create JSR configuration
-      #   if: github.event.inputs.publish_target != 'npm'
-      #   run: |
-      #     cd node-configs
-      #     # Create deno.json for JSR publishing
-      #     cat > deno.json << 'EOF'
-      #     {
-      #       "name": "@taptap/node-configs",
-      #       "version": "${{ needs.check-version.outputs.current_version }}",
-      #       "exports": {
-      #         "./autocorrect": "./autocorrect/index.js",
-      #         "./autocorrect/json": "./autocorrect/autocorrect.json",
-      #         "./biome": "./biome/index.js",
-      #         "./biome/json": "./biome/biome.json",
-      #         "./markdownlint-cli2": "./markdownlint-cli2/index.js",
-      #         "./markdownlint-cli2/json": "./markdownlint-cli2/markdownlint-cli2.jsonc",
-      #         "./prettier": "./prettier/index.js"
-      #       },
-      #       "publish": {
-      #         "include": [
-      #           "autocorrect/**",
-      #           "biome/**",
-      #           "markdownlint-cli2/**",
-      #           "prettier/**",
-      #           "README.md",
-      #           "LICENSE"
-      #         ]
-      #       }
-      #     }
-      #     EOF
-      #     # Ensure LICENSE file exists in node-configs
-      #     if [ ! -f LICENSE ]; then
-      #       cp ../LICENSE .
-      #     fi
-      # 5) Publish to JSR  — needs JSR_AUTH_TOKEN secret
+      # 3) Publish to JSR  — needs JSR_AUTH_TOKEN secret
       - name: Publish to JSR
         if: github.event.inputs.publish_target != 'npm'
         run: |
           cd node-configs
-          bunx jsr publish
+          npx jsr publish
 
-      # 6) Publish to npm  — uses token configured by setup-node
+      # 4) Publish to npm  — uses token configured by setup-node
       - name: Publish to npm
         if: github.event.inputs.publish_target != 'jsr'
         run: |
           cd node-configs
-          bun publish --access public --no-git-checks
+          npm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

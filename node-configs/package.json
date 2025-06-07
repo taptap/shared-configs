@@ -1,8 +1,19 @@
 {
   "name": "@taptap/node-configs",
   "version": "0.1.0",
-  "license": "MIT",
   "description": "Shared configuration files for TapTap Node.js projects",
+  "author": "kros@xd.com",
+  "license": "MIT",
+  "type": "commonjs",
+  "homepage": "https://github.com/taptap/shared-configs#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taptap/shared-configs.git",
+    "directory": "node-configs"
+  },
+  "bugs": {
+    "url": "https://github.com/taptap/shared-configs/issues"
+  },
   "exports": {
     "./autocorrect": {
       "import": "./autocorrect/index.js",
@@ -22,21 +33,20 @@
     "./prettier": {
       "import": "./prettier/index.js",
       "require": "./prettier/index.cjs",
-			"default": "./prettier/prettierrc.json"
+      "default": "./prettier/prettierrc.json"
     }
   },
+  "main": "index.js",
   "files": [
     "autocorrect",
     "biome",
     "markdownlint-cli2",
     "prettier"
   ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/taptap/shared-configs.git",
-    "directory": "node-configs"
   }
 }
