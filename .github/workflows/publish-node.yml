@@ -77,7 +77,10 @@ jobs:
 
       # 4) Install deps (if any) using Bun's lock-file
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: |
+          cd node-configs
+          echo "Package version: ${{ needs.check-version.outputs.current_version }}"
+          bun install --frozen-lockfile
 
       # - name: Setup Deno (for JSR)
       #   uses: denoland/setup-deno@v2
