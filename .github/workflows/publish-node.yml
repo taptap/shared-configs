@@ -66,11 +66,11 @@ jobs:
           node-version: 20
 
       # 3) Publish to JSR  — needs JSR_AUTH_TOKEN secret
-      - name: Publish to JSR
-        if: github.event.inputs.publish_target != 'npm'
-        run: |
-          cd node-configs
-          npx jsr publish
+      # - name: Publish to JSR
+      #   if: github.event.inputs.publish_target != 'npm'
+      #   run: |
+      #     cd node-configs
+      #     npx jsr publish
 
       # 4) Publish to npm  — uses token configured by setup-node
       - name: Publish to npm
