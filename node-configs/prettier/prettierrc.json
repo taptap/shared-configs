@@ -1,0 +1,11 @@
+{
+  "printWidth": 96,
+  "overrides": [
+    {
+      "files": "*.py",
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}

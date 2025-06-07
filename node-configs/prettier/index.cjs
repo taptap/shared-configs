@@ -1,15 +1,8 @@
-/** @type {import("prettier").Config} */
-module.exports = {
-	// Line length
-	printWidth: 100,
+const { readFileSync } = require("node:fs");
+const { join } = require("node:path");
 
-	// Overrides for specific file types
-	overrides: [
-		{
-			files: "*.py",
-			options: {
-				tabWidth: 4,
-			},
-		},
-	],
-};
+const config = JSON.parse(
+	readFileSync(join(__dirname, "prettierrc.json"), "utf-8"),
+);
+
+module.exports = config;

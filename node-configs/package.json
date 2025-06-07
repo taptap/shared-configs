@@ -1,6 +1,7 @@
 {
   "name": "@taptap/node-configs",
   "version": "0.1.0",
+  "license": "MIT",
   "description": "Shared configuration files for TapTap Node.js projects",
   "exports": {
     "./autocorrect": {
@@ -20,7 +21,8 @@
     },
     "./prettier": {
       "import": "./prettier/index.js",
-      "require": "./prettier/index.cjs"
+      "require": "./prettier/index.cjs",
+			"default": "./prettier/prettierrc.json"
     }
   },
   "files": [
@@ -36,6 +38,5 @@
     "type": "git",
     "url": "https://github.com/taptap/shared-configs.git",
     "directory": "node-configs"
-  },
-  "license": "MIT"
+  }
 }
