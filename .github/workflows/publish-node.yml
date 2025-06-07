@@ -52,7 +52,7 @@ jobs:
     if: needs.check-version.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       # 1) Fetch repo (tags included so npm can create provenance if desired)
@@ -97,6 +97,8 @@ jobs:
             git tag -a "$TAG" -m "Release @taptap/node-configs v${VERSION}"
             git push origin "$TAG"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 8) verify publication
       - name: Verify publication
