@@ -1,12 +1,10 @@
-// https://github.com/DavidAnson/markdownlint-cli2
 {
-	"config": {
-		// "blanks-around-headings": false
-		"line-length": false,
-		"no-duplicate-heading": false,
-		"no-empty-links": false
-	},
-	"fix": true,
-	"gitignore": true,
-	"ignores": ["node_modules"]
+  "config": {
+    "line-length": false,
+    "no-duplicate-heading": false,
+    "no-empty-links": false
+  },
+  "fix": true,
+  "gitignore": true,
+  "ignores": ["node_modules"]
 }

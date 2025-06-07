@@ -11,9 +11,6 @@
     "url": "git+https://github.com/taptap/shared-configs.git",
     "directory": "node-configs"
   },
-  "bugs": {
-    "url": "https://github.com/taptap/shared-configs/issues"
-  },
   "exports": {
     "./autocorrect": "./autocorrect.json",
     "./biome": "./biome.json",
@@ -22,6 +19,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/taptap/shared-configs/issues"
   },
   "publishConfig": {
     "access": "public"
