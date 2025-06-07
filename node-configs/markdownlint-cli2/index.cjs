@@ -3,7 +3,7 @@ const { join } = require("node:path");
 
 // Read JSONC file (JSON with comments)
 const configContent = readFileSync(
-	join(__dirname, "markdownlint-cli2.jsonc"),
+	join(__dirname, "index.json"),
 	"utf-8",
 );
 

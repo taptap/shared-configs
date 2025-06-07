@@ -1,6 +1,6 @@
 {
   "name": "@taptap/node-configs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared configuration files for TapTap Node.js projects",
   "author": "kros@xd.com",
   "license": "MIT",
@@ -18,22 +18,22 @@
     "./autocorrect": {
       "import": "./autocorrect/index.js",
       "require": "./autocorrect/index.cjs",
-      "default": "./autocorrect/autocorrect.json"
+      "default": "./autocorrect/index.json"
     },
     "./biome": {
       "import": "./biome/index.js",
       "require": "./biome/index.cjs",
-      "default": "./biome/biome.json"
+      "default": "./biome/index.json"
     },
     "./markdownlint-cli2": {
       "import": "./markdownlint-cli2/index.js",
       "require": "./markdownlint-cli2/index.cjs",
-      "default": "./markdownlint-cli2/markdownlint-cli2.jsonc"
+      "default": "./markdownlint-cli2/index.json"
     },
     "./prettier": {
       "import": "./prettier/index.js",
       "require": "./prettier/index.cjs",
-      "default": "./prettier/prettierrc.json"
+      "default": "./prettier/index.json"
     }
   },
   "main": "index.js",

@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const config = JSON.parse(
-	readFileSync(join(__dirname, "autocorrect.json"), "utf-8"),
+	readFileSync(join(__dirname, "index.json"), "utf-8"),
 );
 
 export default config;
