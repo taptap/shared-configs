@@ -64,22 +64,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          scope: "@taptap"
+          token: ${{ secrets.NPM_TOKEN }}
 
       # 3) Publish to JSR  — needs JSR_AUTH_TOKEN secret
       - name: Publish to JSR
         if: github.event.inputs.publish_target != 'npm'
-        run: |
-          cd node-configs
-          npx jsr publish
+        working-directory: node-configs
+        run: npx jsr publish
 
       # 4) Publish to npm  — uses token configured by setup-node
       - name: Publish to npm
         if: github.event.inputs.publish_target != 'jsr'
-        run: |
-          cd node-configs
-          npm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: node-configs
+        run: npm publish --provenance --access public --no-git-checks
 
       # 7) Create release tag
       - name: Create release tag
