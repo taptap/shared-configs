@@ -140,7 +140,7 @@ jobs:
         if: github.event.inputs.publish_target != 'npm'
         run: |
           cd node-configs
-          bunx jsr publish -y
+          bunx jsr publish
 
       # 6) Publish to npm  — uses token configured by setup-node
       - name: Publish to npm
