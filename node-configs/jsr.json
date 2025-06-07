@@ -1,0 +1,12 @@
+{
+  "name": "@taptap/node-configs",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Shared configuration files for TapTap Node.js projects",
+  "exports": {
+    "./autocorrect": "./autocorrect/index.js",
+    "./biome": "./biome/index.js",
+    "./markdownlint-cli2": "./markdownlint-cli2/index.js",
+    "./prettier": "./prettier/index.js"
+  }
+}

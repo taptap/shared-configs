@@ -1,0 +1,188 @@
+name: Publish Node.js Packages
+
+on:
+  push:
+    branches: [main]
+    paths: ["node-configs/**", ".github/workflows/publish-node.yml"]
+  workflow_dispatch:
+    inputs:
+      publish_target:
+        description: "Publish target"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - both
+          - npm
+          - jsr
+concurrency:
+  group: publish-node-configs
+  cancel-in-progress: true
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      should_publish: ${{ steps.check.outputs.should_publish }}
+      current_version: ${{ steps.check.outputs.current_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check if version changed
+        id: check
+        run: |
+          cd node-configs
+
+          # Get current version
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+          # Check if this version is already published on npm
+          if npm view @taptap/node-configs@$CURRENT_VERSION version 2>/dev/null; then
+            echo "Version $CURRENT_VERSION already published on npm"
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Version $CURRENT_VERSION not yet published"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: check-version
+    if: needs.check-version.outputs.should_publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      # 1) Fetch repo (tags included so npm can create provenance if desired)
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2) Install Node + auth to npm (setup-node auto-writes .npmrc)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          cache: "bun"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # 3) Install Bun (package manager / runtime)
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "latest"
+        env:
+          BUN_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # 4) Install deps (if any) using Bun's lock-file
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # - name: Setup Deno (for JSR)
+      #   uses: denoland/setup-deno@v2
+      #   with:
+      #     deno-version: v2.x
+      # - name: Prepare package
+      #   run: |
+      #     cd node-configs
+      #     # Ensure all necessary files exist
+      #     for dir in autocorrect biome markdownlint-cli2 prettier; do
+      #       if [ ! -f "$dir/index.js" ]; then
+      #         echo "Error: Missing $dir/index.js"
+      #         exit 1
+      #       fi
+      #       if [ ! -f "$dir/index.cjs" ]; then
+      #         echo "Error: Missing $dir/index.cjs"
+      #         exit 1
+      #       fi
+      #     done
+      #     echo "Package version: ${{ needs.check-version.outputs.current_version }}"
+      # - name: Create JSR configuration
+      #   if: github.event.inputs.publish_target != 'npm'
+      #   run: |
+      #     cd node-configs
+      #     # Create deno.json for JSR publishing
+      #     cat > deno.json << 'EOF'
+      #     {
+      #       "name": "@taptap/node-configs",
+      #       "version": "${{ needs.check-version.outputs.current_version }}",
+      #       "exports": {
+      #         "./autocorrect": "./autocorrect/index.js",
+      #         "./autocorrect/json": "./autocorrect/autocorrect.json",
+      #         "./biome": "./biome/index.js",
+      #         "./biome/json": "./biome/biome.json",
+      #         "./markdownlint-cli2": "./markdownlint-cli2/index.js",
+      #         "./markdownlint-cli2/json": "./markdownlint-cli2/markdownlint-cli2.jsonc",
+      #         "./prettier": "./prettier/index.js"
+      #       },
+      #       "publish": {
+      #         "include": [
+      #           "autocorrect/**",
+      #           "biome/**",
+      #           "markdownlint-cli2/**",
+      #           "prettier/**",
+      #           "README.md",
+      #           "LICENSE"
+      #         ]
+      #       }
+      #     }
+      #     EOF
+      #     # Ensure LICENSE file exists in node-configs
+      #     if [ ! -f LICENSE ]; then
+      #       cp ../LICENSE .
+      #     fi
+      # 5) Publish to JSR  — needs JSR_AUTH_TOKEN secret
+      - name: Publish to JSR
+        if: github.event.inputs.publish_target != 'npm'
+        run: |
+          cd node-configs
+          bunx jsr publish -y
+
+      # 6) Publish to npm  — uses token configured by setup-node
+      - name: Publish to npm
+        if: github.event.inputs.publish_target != 'jsr'
+        run: |
+          cd node-configs
+          bun publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # 7) Create release tag
+      - name: Create release tag
+        if: success()
+        run: |
+          VERSION="${{ needs.check-version.outputs.current_version }}"
+          TAG="node-configs-v${VERSION}"
+
+          # Check if tag already exists
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists"
+          else
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git tag -a "$TAG" -m "Release @taptap/node-configs v${VERSION}"
+            git push origin "$TAG"
+          fi
+
+      # 8) verify publication
+      - name: Verify publication
+        if: success()
+        run: |
+          VERSION="${{ needs.check-version.outputs.current_version }}"
+
+          echo "Waiting for packages to be available..."
+          sleep 30
+
+          # Check npm
+          if [ "${{ github.event.inputs.publish_target }}" != "jsr" ]; then
+            echo "Checking npm..."
+            npm view @taptap/node-configs@${VERSION} || echo "npm package not yet available"
+          fi
+
+          # Check JSR
+          if [ "${{ github.event.inputs.publish_target }}" != "npm" ]; then
+            echo "Checking JSR..."
+            deno info jsr:@taptap/node-configs@${VERSION} || echo "JSR package not yet available"
+          fi
