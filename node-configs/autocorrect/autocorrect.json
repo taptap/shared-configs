@@ -1,0 +1,32 @@
+{
+	"$schema": "https://huacnlee.github.io/autocorrect/schema.json",
+	"rules": {
+		"halfwidth-punctuation": 1,
+		"halfwidth-word": 1,
+		"fullwidth": 1,
+		"no-space-fullwidth": 1,
+		"no-space-punctuation": 1,
+		"space-bracket": 1,
+		"space-dash": 0,
+		"space-quotes": 1,
+		"space-word": 1,
+		"space-punctuation": 1,
+		"space-fullwidth-content": 1,
+		"spellcheck": 2
+	},
+	"content": {
+		"codeblock": 1
+	},
+	"spellcheck": {
+		"words": [
+			"App Store",
+			"AppStore = App Store",
+			"DNS",
+			"GitHub",
+			"HTTP",
+			"Node.js",
+			"nodejs = Node.js",
+			"SSL"
+		]
+	}
+}
