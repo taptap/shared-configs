@@ -65,7 +65,7 @@ jobs:
         with:
           node-version: 20
           scope: "@taptap"
-          token: ${{ secrets.NODE_AUTH_TOKEN }}
+          registry-url: "https://registry.npmjs.org"
 
       # 3) Publish to JSR  — needs JSR_AUTH_TOKEN secret
       - name: Publish to JSR
@@ -77,6 +77,8 @@ jobs:
       - name: Publish to npm
         if: github.event.inputs.publish_target != 'jsr'
         working-directory: node-configs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         run: npm publish --provenance --access public --no-git-checks
 
       # 7) Create release tag
