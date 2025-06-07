@@ -73,13 +73,13 @@ jobs:
           npx jsr publish
 
       # 4) Publish to npm  — uses token configured by setup-node
-      # - name: Publish to npm
-      #   if: github.event.inputs.publish_target != 'jsr'
-      #   run: |
-      #     cd node-configs
-      #     npm publish --provenance --access public --no-git-checks
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm
+        if: github.event.inputs.publish_target != 'jsr'
+        run: |
+          cd node-configs
+          npm publish --provenance --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # 7) Create release tag
       - name: Create release tag

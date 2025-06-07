@@ -1,6 +1,6 @@
 {
   "name": "@taptap/node-configs",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Shared configuration files for TapTap Node.js projects",
   "author": "[TapTap Team](https://github.com/taptap)",
   "license": "MIT",
