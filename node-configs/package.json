@@ -1,41 +1,41 @@
 {
-	"name": "@taptap/node-configs",
-	"version": "1.0.0",
-	"description": "Shared configuration files for TapTap Node.js projects",
-	"exports": {
-		"./autocorrect": {
-			"import": "./autocorrect/index.js",
-			"require": "./autocorrect/index.cjs",
-			"default": "./autocorrect/autocorrect.json"
-		},
-		"./biome": {
-			"import": "./biome/index.js",
-			"require": "./biome/index.cjs",
-			"default": "./biome/biome.json"
-		},
-		"./markdownlint-cli2": {
-			"import": "./markdownlint-cli2/index.js",
-			"require": "./markdownlint-cli2/index.cjs",
-			"default": "./markdownlint-cli2/markdownlint-cli2.jsonc"
-		},
-		"./prettier": {
-			"import": "./prettier/index.js",
-			"require": "./prettier/index.cjs"
-		}
-	},
-	"files": [
-		"autocorrect",
-		"biome",
-		"markdownlint-cli2",
-		"prettier"
-	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/taptap/shared-configs.git",
-		"directory": "node-configs"
-	},
-	"license": "MIT"
+  "name": "@taptap/node-configs",
+  "version": "0.1.0",
+  "description": "Shared configuration files for TapTap Node.js projects",
+  "exports": {
+    "./autocorrect": {
+      "import": "./autocorrect/index.js",
+      "require": "./autocorrect/index.cjs",
+      "default": "./autocorrect/autocorrect.json"
+    },
+    "./biome": {
+      "import": "./biome/index.js",
+      "require": "./biome/index.cjs",
+      "default": "./biome/biome.json"
+    },
+    "./markdownlint-cli2": {
+      "import": "./markdownlint-cli2/index.js",
+      "require": "./markdownlint-cli2/index.cjs",
+      "default": "./markdownlint-cli2/markdownlint-cli2.jsonc"
+    },
+    "./prettier": {
+      "import": "./prettier/index.js",
+      "require": "./prettier/index.cjs"
+    }
+  },
+  "files": [
+    "autocorrect",
+    "biome",
+    "markdownlint-cli2",
+    "prettier"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taptap/shared-configs.git",
+    "directory": "node-configs"
+  },
+  "license": "MIT"
 }
