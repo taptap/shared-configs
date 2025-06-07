@@ -1,51 +1,18 @@
 # Biome 配置
 
-TapTap 项目的共享 Biome 配置。
+[Biome](https://biomejs.dev/) 是一个快速的格式化器和 linter，用于 JavaScript、TypeScript、JSX 和 JSON 文件。它旨在替代 ESLint、Prettier 等多个工具。
 
-## 用途
+## 与默认配置的区别
 
-Biome 是一个快速的格式化器和 linter，用于 JavaScript、TypeScript、JSX 和 JSON 文件。它旨在替代 ESLint、Prettier 等多个工具。
+### 格式化设置
 
-## 使用方法
+- **缩进**：使用 2 个空格而非默认的制表符
+- **行宽**：设置为 96 字符（默认 80），适应现代显示器宽度
+- **行尾**：强制使用 LF，确保跨平台一致性
 
-### 安装
+### 版本控制集成
 
-```bash
-bun add -D @taptap/node-configs
-```
+- **启用 Git 集成**：自动读取 `.gitignore` 文件
+- **智能忽略**：避免处理版本控制忽略的文件
 
-### 配置
-
-在项目根目录的 `package.json` 中添加：
-
-```json
-{
-  "biome": "@taptap/node-configs/biome"
-}
-```
-
-### 运行
-
-```bash
-# 格式化
-bunx biome format --write .
-
-# 检查代码
-bunx biome check .
-
-# 自动修复
-bunx biome check --write .
-```
-
-## 路线图
-
-- ✅ 基础配置文件
-- ✅ 格式化规则
-- ✅ Linter 规则
-- ⏳ 项目特定规则覆盖
-
-## 下一步行动项
-
-- 优化规则配置
-- 添加更多自定义规则
-- 性能基准测试
+这些配置优化了开发体验，减少了不必要的格式化冲突，并提高了工具性能。

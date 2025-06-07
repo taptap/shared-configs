@@ -1,47 +1,21 @@
 # AutoCorrect 配置
 
-TapTap 项目的共享 AutoCorrect 配置。
+[AutoCorrect](https://github.com/huacnlee/autocorrect) 是一个基于 Rust 编写的工具，用于「自动纠正」或「提醒检查」文案中的中英文、数字、标点符号等问题。
 
-## 用途
+## 与默认配置的区别
 
-AutoCorrect 是一个基于 Rust 编写的工具，用于「自动纠正」或「提醒检查」文案中的中英文、数字、标点符号等问题。
+### 规则调整
 
-## 使用方法
+- **启用所有中英文排版规则**：确保中英文之间、中文与数字之间有正确的空格
+- **关闭 `space-dash`**：允许中文破折号（——）的使用，不强制在破折号前后加空格
+- **启用代码块检查**：`codeblock: 1` 允许检查 Markdown 代码块中的注释
 
-### 安装
+### 拼写检查词汇表
 
-```bash
-bun add -D @taptap/node-configs
-```
+添加了常用技术术语的正确拼写：
 
-### 配置
+- `App Store`
+- `Node.js`
+- 以及其他常见技术术语如 DNS、GitHub、HTTP、SSL 等
 
-在项目根目录的 `package.json` 中添加：
-
-```json
-{
-  "autocorrect": "@taptap/node-configs/autocorrect"
-}
-```
-
-### 运行
-
-```bash
-# 检查
-bunx autocorrect --lint
-
-# 自动修复
-bunx autocorrect --fix
-```
-
-## 路线图
-
-- ✅ 基础配置文件
-- ✅ 自定义词汇表
-- ✅ 项目特定规则
-
-## 下一步行动项
-
-- 添加更多 TapTap 专有词汇
-- 配置文件类型映射
-- 集成到 CI/CD 流程
+这些配置确保了中文技术文档的排版规范性和术语一致性。

@@ -1,51 +1,21 @@
 # markdownlint-cli2 配置
 
-TapTap 项目的共享 markdownlint-cli2 配置。
-
-## 用途
-
 [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) 是一个用于检查 Markdown 文件格式和风格的工具，帮助保持文档的一致性和可读性。
 
-## 使用方法
+## 与默认配置的区别
 
-### 安装
+### 启用的规则
 
-```bash
-bun add -D @taptap/node-configs
-```
+- **MD007**：无序列表缩进设置为 2 个空格
+- **MD010**：禁止使用制表符，强制使用空格
+- **MD029**：有序列表编号风格设置为 `one_or_ordered`，允许灵活编号
+- **MD033**：允许使用部分 HTML 标签（`details`、`summary`、`sub`、`sup`、`kbd`、`br`）
 
-### 配置
+### 禁用的规则
 
-在项目根目录的 `package.json` 中添加：
+- **MD013**：不限制行长度，适应中文长文档
+- **MD024**：允许重复的标题内容
+- **MD037**：允许强调标记内有空格
+- **MD042**：允许空链接
 
-```json
-{
-  "markdownlint-cli2": "@taptap/node-configs/markdownlint-cli2"
-}
-```
-
-### 运行
-
-```bash
-# 检查所有 Markdown 文件
-bunx markdownlint "**/*.md"
-
-# 自动修复
-bunx markdownlint --fix "**/*.md"
-
-# 忽略 node_modules
-bunx markdownlint "**/*.md" --ignore node_modules
-```
-
-## 路线图
-
-- ✅ 基础配置文件
-- ✅ 符合中文文案排版指北的规则
-- ⏳ 自定义规则
-- ⏳ VS Code 集成配置
-
-## 下一步行动项
-
-- 创建自定义规则
-- 添加 CI/CD 集成示例
-- 提供 VS Code 配置模板
+这些调整使配置更适合中文技术文档的编写习惯，同时保持基本的格式规范。

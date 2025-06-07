@@ -1,51 +1,19 @@
 # Prettier 配置
 
-TapTap 项目的共享 Prettier 配置。
+[Prettier](https://prettier.io/) 是一个固执己见的代码格式化工具，支持多种语言，通过解析代码并重新打印来确保一致的代码风格。
 
-## 用途
+## 与默认配置的区别
 
-Prettier 是一个固执己见的代码格式化工具，支持多种语言，通过解析代码并重新打印来确保一致的代码风格。
+### 基本格式
 
-## 使用方法
+- **行宽**：100 字符（默认 80），适应现代显示器
+- **引号**：JavaScript 使用单引号，JSX 属性使用双引号
+- **尾随逗号**：所有情况下都使用（`all`），包括 ES5 不支持的场景
+- **箭头函数参数**：始终使用括号（`always`）
 
-### 安装
+### 文件类型覆盖
 
-```bash
-bun add -D @taptap/node-configs
-```
+- **Markdown 文件**：`proseWrap: 'always'` 自动换行，便于版本控制追踪
+- **JSON/YAML 文件**：强制使用双引号，保持配置文件一致性
 
-### 配置
-
-在项目根目录的 `package.json` 中添加：
-
-```json
-{
-  "prettier": "@taptap/node-configs/prettier"
-}
-```
-
-### 运行
-
-```bash
-# 检查格式
-bunx prettier --check .
-
-# 格式化所有文件
-bunx prettier --write .
-
-# 格式化特定文件类型
-bunx prettier --write "**/*.{js,jsx,ts,tsx,json,md}"
-```
-
-## 路线图
-
-- ✅ 基础配置文件
-- ✅ 文件类型特定覆盖
-- ⏳ 插件支持（如 prettier-plugin-tailwindcss）
-- ⏳ 与其他工具的集成配置
-
-## 下一步行动项
-
-- 添加常用 Prettier 插件配置
-- 提供 .prettierignore 模板
-- 创建与 ESLint 的集成示例
+这些配置平衡了代码可读性和现代开发实践，特别适合多语言混合项目。
