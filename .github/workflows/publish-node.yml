@@ -77,7 +77,7 @@ jobs:
         if: github.event.inputs.publish_target != 'jsr'
         run: |
           cd node-configs
-          npm publish --access public --no-git-checks
+          npm publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
