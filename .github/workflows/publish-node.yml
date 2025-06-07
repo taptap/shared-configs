@@ -65,7 +65,7 @@ jobs:
         with:
           node-version: 20
           scope: "@taptap"
-          token: ${{ secrets.NPM_TOKEN }}
+          token: ${{ secrets.NODE_AUTH_TOKEN }}
 
       # 3) Publish to JSR  — needs JSR_AUTH_TOKEN secret
       - name: Publish to JSR
@@ -95,8 +95,6 @@ jobs:
             git tag -a "$TAG" -m "Release @taptap/node-configs v${VERSION}"
             git push origin "$TAG"
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 8) verify publication
       - name: Verify publication
