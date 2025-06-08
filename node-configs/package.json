@@ -1,6 +1,6 @@
 {
   "name": "@taptap/node-configs",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Shared configuration files for TapTap Node.js projects",
   "author": "[TapTap Team](https://github.com/taptap)",
   "license": "MIT",
@@ -13,10 +13,16 @@
   },
   "exports": {
     "./autocorrect": "./autocorrect.json",
-    "./biome": "./biome/index.json",
+    "./biome": "./biome.json",
     "./markdownlint-cli2": "./markdownlint-cli2.json",
     "./prettier": "./prettierrc.json"
   },
+  "files": [
+    "autocorrect.json",
+    "biome.json",
+    "markdownlint-cli2.json",
+    "prettierrc.json"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
