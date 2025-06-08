@@ -13,15 +13,15 @@
   },
   "exports": {
     "./autocorrect": "./autocorrectrc.json",
-    "./biome": "./biome.jsonc",
-    "./markdownlint-cli2": "./markdownlint-cli2.jsonc",
+    "./biome": "./biome.json",
+    "./markdownlint-cli2": "./markdownlint-cli2.json",
     "./prettier": "./prettierrc.json"
   },
   "files": [
     "autocorrectrc.json",
-    "biome.jsonc",
-    "markdownlint-cli2.jsonc",
-    "prettierrc.jsonc"
+    "biome.json",
+    "markdownlint-cli2.json",
+    "prettierrc.json"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -57,11 +57,11 @@ npm run biome check --write
 
 ### markdownlint-cli2
 
-在项目根目录创建 `.markdownlint-cli2.jsonc` 文件：
+在项目根目录创建 `.markdownlint-cli2.json` 文件：
 
-```jsonc
+```json
 {
-  "extends": "@taptap/node-configs/markdownlint-cli2",
+  "extends": "@taptap/node-configs/markdownlint-cli2"
 }
 ```
 

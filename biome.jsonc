@@ -1,3 +1,0 @@
-{
-  "extends": ["./node-configs/biome.jsonc"]
-}

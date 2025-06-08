@@ -5,11 +5,11 @@
   "description": "Shared configuration files for TapTap Node.js projects",
   "exports": {
     "./autocorrect": "./autocorrectrc.json",
-    "./biome": "./biome.jsonc",
-    "./markdownlint-cli2": "./markdownlint-cli2.jsonc",
+    "./biome": "./biome.json",
+    "./markdownlint-cli2": "./markdownlint-cli2.json",
     "./prettier": "./prettierrc.json"
   },
-  "files": ["autocorrectrc.json", "biome.jsonc", "markdownlint-cli2.jsonc", "prettierrc.jsonc"],
+  "files": ["autocorrectrc.json", "biome.json", "markdownlint-cli2.json", "prettierrc.json"],
   "publishConfig": {
     "access": "public"
   },
