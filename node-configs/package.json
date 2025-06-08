@@ -37,5 +37,19 @@
     "autocorrect-node": "^2.14.0",
     "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.5.3"
+  },
+  "peerDependenciesMeta": {
+    "@biomejs/biome": {
+      "optional": true
+    },
+    "autocorrect-node": {
+      "optional": true
+    },
+    "markdownlint-cli2": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    }
   }
 }
