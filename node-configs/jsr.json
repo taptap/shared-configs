@@ -1,20 +1,15 @@
 {
   "name": "@taptap/node-configs",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "license": "MIT",
   "description": "Shared configuration files for TapTap Node.js projects",
   "exports": {
-    "./autocorrect": "./autocorrect.json",
-    "./biome": "./biome.json",
-    "./markdownlint-cli2": "./markdownlint-cli2.json",
+    "./autocorrect": "./autocorrectrc.json",
+    "./biome": "./biome.jsonc",
+    "./markdownlint-cli2": "./markdownlint-cli2.jsonc",
     "./prettier": "./prettierrc.json"
   },
-  "files": [
-    "autocorrect.json",
-    "biome.json",
-    "markdownlint-cli2.json",
-    "prettierrc.json"
-  ],
+  "files": ["autocorrectrc.json", "biome.jsonc", "markdownlint-cli2.jsonc", "prettierrc.jsonc"],
   "publishConfig": {
     "access": "public"
   },
