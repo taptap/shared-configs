@@ -1,6 +1,6 @@
 {
   "name": "@taptap/node-configs",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "license": "MIT",
   "description": "Shared configuration files for TapTap Node.js projects",
   "exports": {
@@ -26,16 +26,16 @@
   },
   "peerDependenciesMeta": {
     "@biomejs/biome": {
-      "optional": true
+      "optional": false
     },
     "autocorrect-node": {
-      "optional": true
+      "optional": false
     },
     "markdownlint-cli2": {
-      "optional": true
+      "optional": false
     },
     "prettier": {
-      "optional": true
+      "optional": false
     }
   }
 }
