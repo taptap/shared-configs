@@ -4,12 +4,14 @@
   "license": "MIT",
   "description": "Shared configuration files for TapTap Node.js projects",
   "exports": {
+    ".": "./index.js",
     "./autocorrect": "./autocorrectrc.json",
     "./biome": "./biome.json",
     "./markdownlint-cli2": "./markdownlint-cli2.json",
     "./prettier": "./prettierrc.json"
   },
   "files": [
+    "index.js",
     "autocorrectrc.json",
     "biome.json",
     "markdownlint-cli2.json",
