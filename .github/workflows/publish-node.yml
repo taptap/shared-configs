@@ -1,120 +1,147 @@
 name: Publish Node.js Packages
 
-on:
+"on":
   push:
-    branches: [main]
-    paths: ["node-configs/**", ".github/workflows/publish-node.yml"]
-  workflow_dispatch:
-    inputs:
-      publish_target:
-        description: "Publish target"
-        required: true
-        default: "both"
-        type: choice
-        options:
-          - both
-          - npm
-          - jsr
+    tags:
+      - "node-configs-v*"
+
 concurrency:
-  group: publish-node-configs
+  group: publish-node-configs-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  check-version:
-    runs-on: ubuntu-latest
-    outputs:
-      should_publish: ${{ steps.check.outputs.should_publish }}
-      current_version: ${{ steps.check.outputs.current_version }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Check if version changed
-        id: check
-        run: |
-          cd node-configs
-
-          # Get current version
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-
-          # Check if this version is already published on npm
-          if npm view @taptap/node-configs@$CURRENT_VERSION version 2>/dev/null; then
-            echo "Version $CURRENT_VERSION already published on npm"
-            echo "should_publish=false" >> $GITHUB_OUTPUT
-          else
-            echo "Version $CURRENT_VERSION not yet published"
-            echo "should_publish=true" >> $GITHUB_OUTPUT
-          fi
-
   publish:
-    needs: check-version
-    if: needs.check-version.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
     steps:
-      # 1) Fetch repo (tags included so npm can create provenance if desired)
+      # 1) Checkout repository
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2) Install Node + auth to npm (setup-node auto-writes .npmrc)
+      # 2) Extract version from tag
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG_NAME="${{ github.ref_name }}"
+          VERSION=${TAG_NAME#node-configs-v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      # 3) Setup Node.js with npm authentication
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           scope: "@taptap"
           registry-url: "https://registry.npmjs.org"
 
-      # 3) Publish to JSR  — needs JSR_AUTH_TOKEN secret
-      - name: Publish to JSR
-        if: github.event.inputs.publish_target != 'npm'
-        working-directory: node-configs
-        run: npx jsr publish
+      # 4) Ensure jq is available
+      - name: Install jq
+        run: |
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+          jq --version
 
-      # 4) Publish to npm  — uses token configured by setup-node
+      # 5) Setup Deno for JSR operations
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      # 6) Check if version already published to npm
+      - name: Check npm publication status
+        id: npm_check
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if npm view @taptap/node-configs@$VERSION version 2>/dev/null; then
+            echo "Version $VERSION already published on npm"
+            echo "npm_published=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version $VERSION not yet published on npm"
+            echo "npm_published=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 7) Check if version already published to JSR
+      - name: Check JSR publication status
+        id: jsr_check
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if deno info jsr:@taptap/node-configs@$VERSION 2>&1 | grep -q "error: JSR package not found"; then
+            echo "Version $VERSION not yet published on JSR"
+            echo "jsr_published=false" >> $GITHUB_OUTPUT
+          elif deno info jsr:@taptap/node-configs@$VERSION >/dev/null 2>&1; then
+            echo "Version $VERSION already published on JSR"
+            echo "jsr_published=true" >> $GITHUB_OUTPUT
+          else
+            echo "Could not determine JSR publication status, assuming not published"
+            echo "jsr_published=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 8) Exit if both packages are already published
+      - name: Check if publication needed
+        run: |
+          if [[ "${{ steps.npm_check.outputs.npm_published }}" == "true" && "${{ steps.jsr_check.outputs.jsr_published }}" == "true" ]]; then
+            echo "Both npm and JSR packages are already published. Exiting."
+            exit 0
+          fi
+
+      # 9) Update both package.json and jsr.json versions
+      - name: Update package versions
+        working-directory: node-configs
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Update package.json
+          npm version $VERSION --no-git-tag-version --allow-same-version
+          echo "Updated package.json to version $VERSION"
+
+          # Update jsr.json version using jq
+          if [ -f jsr.json ]; then
+            jq --arg version "$VERSION" '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
+            echo "Updated jsr.json to version $VERSION"
+          else
+            echo "jsr.json not found, skipping JSR version update"
+          fi
+
+      # 10) Publish to JSR if not already published
+      - name: Publish to JSR
+        if: steps.jsr_check.outputs.jsr_published == 'false'
+        working-directory: node-configs
+        run: |
+          echo "Publishing to JSR..."
+          npx jsr publish
+
+      # 11) Publish to npm if not already published
       - name: Publish to npm
-        if: github.event.inputs.publish_target != 'jsr'
+        if: steps.npm_check.outputs.npm_published == 'false'
         working-directory: node-configs
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: npm publish --provenance --access public --no-git-checks
-
-      # 7) Create release tag
-      - name: Create release tag
-        if: success()
         run: |
-          VERSION="${{ needs.check-version.outputs.current_version }}"
-          TAG="node-configs-v${VERSION}"
+          echo "Publishing to npm..."
+          npm publish --provenance --access public --no-git-checks
 
-          # Check if tag already exists
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag $TAG already exists"
-          else
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git tag -a "$TAG" -m "Release @taptap/node-configs v${VERSION}"
-            git push origin "$TAG"
-          fi
-
-      # 8) verify publication
-      - name: Verify publication
-        if: success()
+      # 12) Verify publications
+      - name: Verify publications
         run: |
-          VERSION="${{ needs.check-version.outputs.current_version }}"
+          VERSION="${{ steps.version.outputs.version }}"
 
           echo "Waiting for packages to be available..."
           sleep 30
 
-          # Check npm
-          if [ "${{ github.event.inputs.publish_target }}" != "jsr" ]; then
-            echo "Checking npm..."
+          # Verify npm publication
+          if [[ "${{ steps.npm_check.outputs.npm_published }}" == "false" ]]; then
+            echo "Verifying npm publication..."
             npm view @taptap/node-configs@${VERSION} || echo "npm package not yet available"
           fi
 
-          # Check JSR
-          if [ "${{ github.event.inputs.publish_target }}" != "npm" ]; then
-            echo "Checking JSR..."
+          # Verify JSR publication
+          if [[ "${{ steps.jsr_check.outputs.jsr_published }}" == "false" ]]; then
+            echo "Verifying JSR publication..."
             deno info jsr:@taptap/node-configs@${VERSION} || echo "JSR package not yet available"
           fi
+
+          echo "Publication process completed for version $VERSION"
+
