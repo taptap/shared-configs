@@ -4,6 +4,7 @@ name: Publish Node.js Packages
   push:
     tags:
       - "node-configs-v*"
+  workflow_dispatch:
 
 concurrency:
   group: publish-node-configs-${{ github.ref }}
