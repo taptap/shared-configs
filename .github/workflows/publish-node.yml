@@ -112,7 +112,7 @@ jobs:
         working-directory: node-configs
         run: |
           echo "Publishing to JSR..."
-          npx jsr publish
+          npx jsr publish --allow-dirty
 
       # 11) Publish to npm if not already published
       - name: Publish to npm
@@ -122,7 +122,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         run: |
           echo "Publishing to npm..."
-          npm publish --provenance --access public --no-git-checks
+          npm publish --provenance --access public --no-git-checks --allow-dirty
 
       # 12) Verify publications
       - name: Verify publications
