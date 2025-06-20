@@ -3,12 +3,7 @@
 // Usage: import config from '@taptap/node-configs/biome'
 
 export default {
-  name: '@taptap/node-configs',
-  description: 'Shared configuration files for TapTap Node.js projects',
-  configs: [
-    'autocorrect',
-    'biome', 
-    'markdownlint-cli2',
-    'prettier'
-  ]
+  name: "@taptap/node-configs",
+  description: "Shared configuration files for TapTap Node.js projects",
+  configs: ["autocorrect", "biome", "commitlint", "markdownlint-cli2", "prettier"],
 };
