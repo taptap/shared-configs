@@ -42,7 +42,7 @@ autocorrect --fix
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
   "extends": ["@taptap/node-configs/biome"]
 }
 ```
