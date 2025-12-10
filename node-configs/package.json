@@ -42,12 +42,12 @@
   },
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
-    "@biomejs/biome": "^2.3.7",
+    "@biomejs/biome": "^2.3.8",
     "autocorrect-node": "^2.14.0",
     "commitlint-config-gitmoji": "^2.3.1",
     "commitlint-plugin-gitmoji": "^2.2.6",
     "gitmojis": "^3.15.0",
     "js-yaml": "^4.1.1",
-    "prettier": "^3.6.2"
+    "prettier": "^3.7.4"
   }
 }
