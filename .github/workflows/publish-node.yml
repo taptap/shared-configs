@@ -118,8 +118,6 @@ jobs:
       - name: Publish to npm
         if: steps.npm_check.outputs.npm_published == 'false'
         working-directory: node-configs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         run: |
           echo "Publishing to npm..."
           npm publish --provenance --access public --no-git-checks --allow-dirty
@@ -145,4 +143,3 @@ jobs:
           fi
 
           echo "Publication process completed for version $VERSION"
-
