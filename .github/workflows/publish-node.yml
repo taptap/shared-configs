@@ -31,14 +31,19 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
-      # 3) Setup Node.js with npm authentication
+      # 3) Setup Node.js (OIDC authentication via Trusted Publisher)
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          scope: "@taptap"
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
 
-      # 4) Ensure jq is available
+      # 4) Ensure npm >= 11.5.1 for OIDC Trusted Publishing
+      - name: Upgrade npm for OIDC support
+        run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
+
+      # 5) Ensure jq is available
       - name: Install jq
         run: |
           if ! command -v jq &> /dev/null; then
@@ -46,12 +51,12 @@ jobs:
           fi
           jq --version
 
-      # 5) Setup Deno for JSR operations
+      # 6) Setup Deno for JSR operations
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
 
-      # 6) Check if version already published to npm
+      # 7) Check if version already published to npm
       - name: Check npm publication status
         id: npm_check
         run: |
@@ -64,7 +69,7 @@ jobs:
             echo "npm_published=false" >> $GITHUB_OUTPUT
           fi
 
-      # 7) Check if version already published to JSR
+      # 8) Check if version already published to JSR
       - name: Check JSR publication status
         id: jsr_check
         run: |
@@ -80,7 +85,7 @@ jobs:
             echo "jsr_published=false" >> $GITHUB_OUTPUT
           fi
 
-      # 8) Exit if both packages are already published
+      # 9) Exit if both packages are already published
       - name: Check if publication needed
         run: |
           if [[ "${{ steps.npm_check.outputs.npm_published }}" == "true" && "${{ steps.jsr_check.outputs.jsr_published }}" == "true" ]]; then
@@ -88,7 +93,7 @@ jobs:
             exit 0
           fi
 
-      # 9) Update both package.json and jsr.json versions
+      # 10) Update both package.json and jsr.json versions
       - name: Update package versions
         working-directory: node-configs
         run: |
@@ -106,7 +111,7 @@ jobs:
             echo "jsr.json not found, skipping JSR version update"
           fi
 
-      # 10) Publish to JSR if not already published
+      # 11) Publish to JSR if not already published
       - name: Publish to JSR
         if: steps.jsr_check.outputs.jsr_published == 'false'
         working-directory: node-configs
@@ -114,15 +119,15 @@ jobs:
           echo "Publishing to JSR..."
           npx jsr publish --allow-dirty
 
-      # 11) Publish to npm if not already published
+      # 12) Publish to npm if not already published (using OIDC Trusted Publisher)
       - name: Publish to npm
         if: steps.npm_check.outputs.npm_published == 'false'
         working-directory: node-configs
         run: |
-          echo "Publishing to npm..."
+          echo "Publishing to npm with OIDC authentication..."
           npm publish --provenance --access public --no-git-checks --allow-dirty
 
-      # 12) Verify publications
+      # 13) Verify publications
       - name: Verify publications
         run: |
           VERSION="${{ steps.version.outputs.version }}"
