@@ -37,17 +37,25 @@
   "publishConfig": {
     "access": "public"
   },
+  "overrides": {
+    "smol-toml": "1.8.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "smol-toml": "1.8.0"
+    }
+  },
   "peerDependencies": {
     "markdownlint-cli2": "^0.23.2"
   },
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
-    "@biomejs/biome": "^2.5.7",
+    "@biomejs/biome": "^2.5.14",
     "autocorrect-node": "^2.14.0",
     "commitlint-config-gitmoji": "^2.3.1",
     "commitlint-plugin-gitmoji": "^2.2.6",
     "gitmojis": "^3.15.0",
-    "js-yaml": "^4.3.1",
-    "prettier": "^3.9.6"
+    "js-yaml": "^4.3.2",
+    "prettier": "^3.9.8"
   }
 }
